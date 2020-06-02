@@ -2,6 +2,7 @@
   <dictionary name="mansu">
     <words>
       <w>blited</w>
+      <w>collidable</w>
       <w>pygame</w>
       <w>pygames</w>
     </words>

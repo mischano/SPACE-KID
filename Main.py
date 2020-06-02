@@ -7,4 +7,5 @@ import pygame
 # Audio.playAudio()   # menu music
 
 wd = Window(1440, 820)
-pygame.mixer_music.stop()
+play_the_game = wd.main_menu()
+# pygame.mixer_music.stop()
