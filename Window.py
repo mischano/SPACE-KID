@@ -12,7 +12,7 @@ BRIGHT_DARK = (20, 20, 20)
 GAME_TITLE = "SPACE KID"  # Title of the game. Shows on the top left corner.
 
 
-def exit_game():
+def exit_game(image):
     """ exit_game: Exit pygame & program. """
     pygame.quit()
     sys.exit()
@@ -23,7 +23,7 @@ def is_mouse_clicked():
         return: True/False. """
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            exit_game()
+            exit_game(event)
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 1:
                 return True
@@ -46,7 +46,7 @@ class Window:
             return: background image.
         """
         pygame.init()
-        self.gameScreen = pygame.display.set_mode((self.gameScreenWidth, self.gameScreenHeight))  # set the game window.
+        self.gameScreen = pygame.display.set_mode((self.gameScreenWidth, self.gameScreenHeight), )  # set the game window.
         pygame.display.set_caption(GAME_TITLE)  # set the game caption (top left corner).
         get_image = pygame.image.load('background.jpg')  # load the background image from .py dir.
         return get_image
@@ -73,16 +73,16 @@ class Window:
     def main_menu(self):
         """ main_menu: Displays the main menu. """
         rect_class = rectangleClass.main_menu_text
-        functions_list = [0, self.menu_play, self.menu_settings, self.menu_credits, exit_game]
+        functions_list = [0, self.play, self.menu_settings, self.menu_credits, exit_game]
         background_image = self.init_window()  # create window.
 
-        go_back = False
-        while not go_back:
+        play = False
+        while not play:
             mouse_pos = pygame.mouse.get_pos()  # mouse coordinates.
             self.gameScreen.blit(background_image, (0, 0))  # render the background image.
 
             '''' Display menu options & check if any of the options is clicked .'''
-            go_back = self.display(rect_class, functions_list, mouse_pos, background_image)
+            play = self.display(rect_class, functions_list, mouse_pos, background_image)
 
             pygame.display.update()  # update gameScreen.
 
@@ -97,7 +97,7 @@ class Window:
                 image (jpg): background image
         """
         ''' A range of callable methods. '''
-        min_range = rect_list[3][0]
+        min_range = rect_list[3][0]     # a range of text that can be highlighted & clicked.
         max_range = rect_list[3][1]
 
         text_len = len(rect_list[0])
@@ -114,15 +114,14 @@ class Window:
                 self.draw_render_blit(rect_list[0][i], rect_list[1][i], rect_list[2][i], RED)   # highlight it in red.
                 ''' If mouse is clicked, check what object it clicked if any. '''
                 if click:
-                    if rect_list[0][i] == 'Play':
-                        return False
-                    if rect_list[0][i] == 'Exit':
-                        functions_list[i]()  # call with no arguments because exit_game() method takes no parameters..
-                    if rect_list[0][i] == 'Back':
-                        return True
+                    if i == max_range - 1:      # if 'back' button clicked (last element in a list).
+                        return True             # return true to exit calling loop.
                     else:
                         functions_list[i](image)    # refer to the last list of 2D list in Rectangle class.
         return False
+
+    def play(self, image):
+        pass
 
     def menu_credits(self, image):
         """ menu_credits: display credits sub-menu.
@@ -143,7 +142,7 @@ class Window:
             args: image (jpg): background image
         """
         rect_class = rectangleClass.settings_text
-        functions_list = [0, self.menu_settings_controls, self.menu_settings_window, self.menu_settings_music]    # a list of callable methods.
+        functions_list = [0, self.menu_settings_graphics, self.menu_settings_controls, self.menu_settings_music, self.re_init_window]
 
         go_back = False
         while not go_back:
@@ -166,11 +165,24 @@ class Window:
 
             pygame.display.update()
 
-    def menu_settings_window(self, image):
+    def menu_settings_graphics(self, image):
+        rect_class = rectangleClass.settings_controls_window_size_text
+        function_list = [0, self.re_init_window, self.re_init_window, self.re_init_window, self.re_init_window]
+
+        go_back = False
+        while not go_back:
+            mouse_pos = pygame.mouse.get_pos()
+
+            self.gameScreen.blit(image, (0, 0))
+            go_back = self.display(rect_class, function_list, mouse_pos, image)
+
+            pygame.display.update()
+
+    def re_init_window(self, image):
         pass
 
     def menu_settings_music(self, image):
         pass
 
-    def menu_play(self, image):
-        pass
+    '''def menu_play(self, image):
+        pass'''
