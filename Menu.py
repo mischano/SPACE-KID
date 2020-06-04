@@ -31,7 +31,7 @@ def is_mouse_clicked():
                 return False
 
 
-class Window:
+class Menu:
 
     def __init__(self, width, height):
         self.gameScreenWidth = width
@@ -46,7 +46,7 @@ class Window:
             return: background image.
         """
         pygame.init()
-        self.gameScreen = pygame.display.set_mode((self.gameScreenWidth, self.gameScreenHeight), )  # set the game window.
+        self.gameScreen = pygame.display.set_mode((self.gameScreenWidth, self.gameScreenHeight))  # set the game window.
         pygame.display.set_caption(GAME_TITLE)  # set the game caption (top left corner).
         get_image = pygame.image.load('background.jpg')  # load the background image from .py dir.
         return get_image
@@ -70,6 +70,39 @@ class Window:
 
         return rect
 
+    def display(self, rect_list, functions_list, mouse_pos, image):
+        """ display: Check if any of the menu options clicked & display it if it is.
+            args:
+                rect_list (list): 2D array from Rectangle class
+                functions_list (list): a list of functions to be called
+                mouse_pos (x,y): mouse position
+                image (jpg): background image
+        """
+        ''' A range of callable methods. '''
+        min_range = rect_list[3][0]     # a range of text that can be highlighted & clicked.
+        max_range = rect_list[3][1]
+        back_button = max_range - 1
+
+        text_len = len(rect_list[0])
+        captured_text = [0] * text_len      # a list for collidable objects inside the window.
+        click = is_mouse_clicked()          # mouse status.
+
+        ''' Create rectangles objects & blit texts over them. '''
+        for i in range(text_len):
+            captured_text[i] = self.draw_render_blit(rect_list[0][i], rect_list[1][i], rect_list[2][i], DARK_WHITE)
+
+        ''' Check for mouse collision & iteration with objects. '''
+        for i in range(min_range, max_range):
+            if captured_text[i].collidepoint(mouse_pos):        # if mouse hover over an object.
+                self.draw_render_blit(rect_list[0][i], rect_list[1][i], rect_list[2][i], RED)   # highlight it in red.
+                ''' If mouse is clicked, check what object it clicked if any. '''
+                if click:
+                    if i == back_button:      # if 'back' button clicked (last element in a list).
+                        return True             # return true to exit calling loop.
+                    else:
+                        functions_list[i](image)    # refer to the last list of 2D list in Rectangle class.
+        return False
+
     def main_menu(self):
         """ main_menu: Displays the main menu. """
         rect_class = rectangleClass.main_menu_text
@@ -87,41 +120,6 @@ class Window:
             pygame.display.update()  # update gameScreen.
 
         return True
-
-    def display(self, rect_list, functions_list, mouse_pos, image):
-        """ display: Check if any of the menu options clicked & display it if it is.
-            args:
-                rect_list (list): 2D array from Rectangle class
-                functions_list (list): a list of functions to be called
-                mouse_pos (x,y): mouse position
-                image (jpg): background image
-        """
-        ''' A range of callable methods. '''
-        min_range = rect_list[3][0]     # a range of text that can be highlighted & clicked.
-        max_range = rect_list[3][1]
-
-        text_len = len(rect_list[0])
-        captured_text = [0] * text_len      # a list for collidable objects inside the window.
-        click = is_mouse_clicked()          # mouse status.
-
-        ''' Create rectangles objects & blit texts over them. '''
-        for i in range(text_len):
-            captured_text[i] = self.draw_render_blit(rect_list[0][i], rect_list[1][i], rect_list[2][i], DARK_WHITE)
-
-        ''' Check for mouse collision & iteration with objects. '''
-        for i in range(min_range, max_range):
-            if captured_text[i].collidepoint(mouse_pos):        # if mouse hover over an object.
-                self.draw_render_blit(rect_list[0][i], rect_list[1][i], rect_list[2][i], RED)   # highlight it in red.
-                ''' If mouse is clicked, check what object it clicked if any. '''
-                if click:
-                    if i == max_range - 1:      # if 'back' button clicked (last element in a list).
-                        return True             # return true to exit calling loop.
-                    else:
-                        functions_list[i](image)    # refer to the last list of 2D list in Rectangle class.
-        return False
-
-    def play(self, image):
-        pass
 
     def menu_credits(self, image):
         """ menu_credits: display credits sub-menu.
@@ -184,5 +182,5 @@ class Window:
     def menu_settings_music(self, image):
         pass
 
-    '''def menu_play(self, image):
-        pass'''
+    def play(self, image):
+        pass

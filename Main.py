@@ -1,4 +1,4 @@
-from Window import Window
+import Menu as menuClass
 import Audio
 import pygame
 import pygame
@@ -7,9 +7,8 @@ from time import sleep
 # Audio.setUpAudio()
 # Audio.playAudio()   # menu music
 
-wd = Window(1440, 820)
-# wd = Window(900, 800)
-play = wd.main_menu()
+menu = menuClass.Menu(1440, 820)
+play = menu.main_menu()
 if play is True:
     pygame.display.update()
 
