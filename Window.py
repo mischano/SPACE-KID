@@ -83,7 +83,6 @@ class GameWindow:
         min_range = rect_list[3][0]  # a range of text that can be highlighted & clicked.
         max_range = rect_list[3][1]
         back_button = max_range - 1
-
         text_len = len(rect_list[0])
         captured_text = [0] * text_len  # a list for collidable objects inside the window.
         click = is_mouse_clicked()  # mouse status.
