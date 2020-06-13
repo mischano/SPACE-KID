@@ -1,8 +1,9 @@
-from Menu import GameMenu
-import Audio
+from menu import Menu
+from character import Character
+import audio
 
-Audio.setUpAudio()
-Audio.playAudio()
-window = GameMenu(1440, 820)
-play = window.main_menu()
-
+audio.setUpAudio()
+audio.playAudio()
+menu_obj = Menu(False, 120)
+mm = menu_obj.main_menu()
+character = Character(menu_obj).main_menu()

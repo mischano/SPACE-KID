@@ -1,3 +1,4 @@
+from background import Background
 import pygame
 from pygame.locals import *
 import sys
@@ -30,27 +31,30 @@ def is_mouse_clicked():
                 return False
 
 
-class GameWindow:
-    def __init__(self, width, height):
-        self.gameScreenWidth = width
-        self.gameScreenHeight = height
-        self.gameScreen = 0  # menu window object.
-        self.fontType = 'munro.ttf'
-        self.fps = 60
+class Window:
+    def __init__(self, width, height, fs, fps):
+        self.width = width
+        self.height = height
+        self.screen = 0  # menu window object.
+        self.screen_size = fs
+        # self.fontType = 'munro.ttf'
+        self.fps = fps
 
-    def init_window(self, is_full_screen):
+    def init_window(self):
         """ init_window: Create & initialize a window.
             return: background image.
         """
         pygame.init()
-        if not is_full_screen:
-            self.gameScreen = pygame.display.set_mode((self.gameScreenWidth, self.gameScreenHeight))  # set the game window.
+        if not self.screen_size:
+            self.screen = pygame.display.set_mode((self.width, self.height))  # set the game window.
         else:
-            self.gameScreen = pygame.display.set_mode((self.gameScreenWidth, self.gameScreenHeight), FULLSCREEN)  # set the game window.
+            self.screen = pygame.display.set_mode((self.width, self.height), FULLSCREEN)  # set the game window.
 
         pygame.display.set_caption(GAME_TITLE)  # set the game caption (top left corner).
-        get_image = pygame.image.load('background.jpg')  # load the background image from .py dir.
-        return get_image
+        '''get_image = pygame.image.load('background.jpg')  # load the background image from .py dir.
+        get_image = pygame.transform.scale(get_image, (self.width, self.height)'''
+        # get_image = self.load_image(0)
+        # return get_image
 
     def draw_render_blit(self, text, text_pos, font_size, font_color):
         """ draw_render_blit: Draws a rectangle, renders a text, & blits over a rectangle.
@@ -63,11 +67,11 @@ class GameWindow:
                 rectangle (tuple) - rectangle coordinates
         """
         pygame.font.init()
-        font = pygame.font.Font(self.fontType, font_size)  # load a custom font from .py dir
-        rect = pygame.draw.rect(self.gameScreen, BRIGHT_DARK, text_pos)  # draw_render_blit a rectangle.
+        font = pygame.font.Font('munro.ttf', font_size)  # load a custom font from .py dir
+        rect = pygame.draw.rect(self.screen, BRIGHT_DARK, text_pos)  # draw_render_blit a rectangle.
         render_text = font.render(text, 0, font_color)  # render the text.
         ''' Note: text has to be blited over a geometric shape to be rendered. '''
-        self.gameScreen.blit(render_text, rect)  # render the text over a rectangle
+        self.screen.blit(render_text, rect)  # render the text over a rectangle
 
         return rect
 
@@ -99,6 +103,8 @@ class GameWindow:
                 if click:
                     if i == back_button:  # if 'back' button clicked (last element in a list).
                         return True  # return true to exit calling loop.
+                    elif rect_list[0][i] == 'Play':
+                        return True
                     else:
                         functions_list[i](image)  # refer to the last list of 2D list in Rectangle class.
         return False
