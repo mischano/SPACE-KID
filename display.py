@@ -1,4 +1,6 @@
-from background import Background
+import rectangle as rect
+from stack import Stack
+import render
 import pygame
 from pygame.locals import *
 import sys
@@ -37,8 +39,8 @@ class Window:
         self.height = height
         self.screen = 0  # menu window object.
         self.screen_size = fs
-        # self.fontType = 'munro.ttf'
         self.fps = fps
+        self.stack_obj = Stack()
 
     def init_window(self):
         """ init_window: Create & initialize a window.
@@ -51,60 +53,41 @@ class Window:
             self.screen = pygame.display.set_mode((self.width, self.height), FULLSCREEN)  # set the game window.
 
         pygame.display.set_caption(GAME_TITLE)  # set the game caption (top left corner).
-        '''get_image = pygame.image.load('background.jpg')  # load the background image from .py dir.
-        get_image = pygame.transform.scale(get_image, (self.width, self.height)'''
-        # get_image = self.load_image(0)
-        # return get_image
 
-    def draw_render_blit(self, text, text_pos, font_size, font_color):
-        """ draw_render_blit: Draws a rectangle, renders a text, & blits over a rectangle.
-            args:
-                text (str): string text
-                text_pos (tuple): rectangle coordinates
-                font_size (int): size of the font
-                font_color (tuple): RGB color
-            return:
-                rectangle (tuple) - rectangle coordinates
-        """
-        pygame.font.init()
-        font = pygame.font.Font('munro.ttf', font_size)  # load a custom font from .py dir
-        rect = pygame.draw.rect(self.screen, BRIGHT_DARK, text_pos)  # draw_render_blit a rectangle.
-        render_text = font.render(text, 0, font_color)  # render the text.
-        ''' Note: text has to be blited over a geometric shape to be rendered. '''
-        self.screen.blit(render_text, rect)  # render the text over a rectangle
+    def is_button_clicked(self):
+        if self.stack_obj.size() != 0:
+            if self.stack_obj.peek() != 0:
+                button = rect.get_surface(self.stack_obj.size())[self.stack_obj.peek()]
+            else:
+                self.stack_obj.pop()
+                return 0
+        else:
+            button = rect.get_surface(0)
 
-        return rect
+        return button
 
-    def display(self, rect_list, functions_list, mouse_pos, image):
-        """ display: Check if any of the menu options clicked & display it if it is.
-            args:
-                rect_list (list): 2D array from Rectangle class
-                functions_list (list): a list of functions to be called
-                mouse_pos (x,y): mouse position
-                image (jpg): background image
-        """
-        ''' A range of callable methods. '''
-        min_range = rect_list[3][0]  # a range of text that can be highlighted & clicked.
-        max_range = rect_list[3][1]
-        back_button = max_range - 1
-        text_len = len(rect_list[0])
-        captured_text = [0] * text_len  # a list for collidable objects inside the window.
-        click = is_mouse_clicked()  # mouse status.
+    def display(self):
 
-        ''' Create rectangles objects & blit texts over them. '''
-        for i in range(text_len):
-            captured_text[i] = self.draw_render_blit(rect_list[0][i], rect_list[1][i], rect_list[2][i], DARK_WHITE)
+        button = self.is_button_clicked()
+        if button == 0:
+            return True
 
-        ''' Check for mouse collision & iteration with objects. '''
-        for i in range(min_range, max_range):
-            if captured_text[i].collidepoint(mouse_pos):  # if mouse hover over an object.
-                self.draw_render_blit(rect_list[0][i], rect_list[1][i], rect_list[2][i], RED)  # highlight it in red.
-                ''' If mouse is clicked, check what object it clicked if any. '''
+        button_name = button[0]
+        button_font_size = button[2]
+        num_of_button = len(button[0])
+        drawn_button = [0] * num_of_button
+        rect_pos = button[1]
+        _min = button[3][0]  # a range of text that can be highlighted & clicked.
+        _max = button[3][1]
+        click = is_mouse_clicked()
+
+        for i in range(num_of_button):
+            drawn_button[i] = render.draw(self.screen, button_name[i], rect_pos[i], button_font_size[i], DARK_WHITE)
+        for i in range(int(_min), int(_max)):
+            if drawn_button[i].collidepoint(pygame.mouse.get_pos()):
+                render.draw(self.screen, button_name[i], rect_pos[i], button_font_size[i], RED)
                 if click:
-                    if i == back_button:  # if 'back' button clicked (last element in a list).
-                        return True  # return true to exit calling loop.
-                    elif rect_list[0][i] == 'Play':
-                        return True
-                    else:
-                        functions_list[i](image)  # refer to the last list of 2D list in Rectangle class.
-        return False
+                    self.stack_obj.push(i)
+                    return True
+
+
