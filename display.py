@@ -1,6 +1,8 @@
 import rectangle as rect
 from stack import Stack
+from background import Background
 import render
+import audio
 import pygame
 from pygame.locals import *
 import sys
@@ -10,7 +12,8 @@ DARK_WHITE = (189, 176, 174)
 BLACK = (0, 0, 0)
 GREEN = (3, 156, 44)
 RED = (163, 37, 11)
-BRIGHT_DARK = (20, 20, 20)
+BRIGHT_DARK = (18, 6, 38)
+
 GAME_TITLE = "SPACE KID"  # Title of the game. Shows on the top left corner.
 
 
@@ -40,7 +43,11 @@ class Window:
         self.screen = 0  # menu window object.
         self.screen_size = fs
         self.fps = fps
+
+        self.i = 100
+
         self.stack_obj = Stack()
+        self.background_obj = Background(self.width, self.height)
 
     def init_window(self):
         """ init_window: Create & initialize a window.
@@ -82,12 +89,36 @@ class Window:
         click = is_mouse_clicked()
 
         for i in range(num_of_button):
-            drawn_button[i] = render.draw(self.screen, button_name[i], rect_pos[i], button_font_size[i], DARK_WHITE)
+            drawn_button[i] = render.draw(self.screen, button_name[i], rect_pos[i], button_font_size[i], DARK_WHITE, i)
         for i in range(int(_min), int(_max)):
             if drawn_button[i].collidepoint(pygame.mouse.get_pos()):
-                render.draw(self.screen, button_name[i], rect_pos[i], button_font_size[i], RED)
+                if self.i is not i:
+                    audio.play_sound('hower')
+                    self.i = i
+                render.draw(self.screen, button_name[i], rect_pos[i], button_font_size[i], RED, i)
                 if click:
+                    audio.play_sound('click')
                     self.stack_obj.push(i)
+
+                    window = pygame.display.set_mode((self.width, self.height))
+                    background = pygame.Surface((window.get_rect().width, window.get_rect().height))
+                    background.fill((0, 0, 0))
+                    image = self.background_obj.get_image()
+                    image = image.convert()
+                    rect = image.get_rect()
+                    index = 255
+                    '''y = 3
+                    (a, b, c, d) = rect_pos[i]'''
+                    while index != 0:
+                        image.set_alpha(index)
+                        window.fill((0, 0, 0))
+                        window.blit(background, background.get_rect())
+                        window.blit(image, rect)
+                        # pygame.time.delay(20)
+                        index -= 1
+                        # render.draw(window, button_name[i], (a + y, b, c, d), button_font_size[i], RED, i)
+                        pygame.display.update()
+                        # y += 3
                     return True
-
-
+                else:
+                    return False

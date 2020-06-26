@@ -1,38 +1,24 @@
 from display import Window
 from background import Background
+import audio
 import pygame
 
 # CLOCK = pygame.time.Clock()
 
 
 class Menu(Window):
-    """
-    A class to represent main and sub-menus
-
-    """
 
     def __init__(self, full_screen, fps):
-        """
-        :param full_screen:
-            bool -- set to True if game is in full screen mode, False otherwise
-
-        :param fps:
-            int -- number of frames per second
-
-        """
         super(Menu, self).__init__(1440, 820, full_screen, fps)
         super().init_window()
 
         self.fps = fps
         self.background_obj = Background(self.width, self.height)
 
+        audio.load_music('Sofi.wav')
+        audio.play_music()
+
     def main_menu(self):
-        """ Calls main menu and sub-menus until 'Exit' or 'Play' buttons are clicked.
-
-        :param: None
-
-        :return: None
-        """
 
         done = False    # false until a button is clicked
         while not done:
