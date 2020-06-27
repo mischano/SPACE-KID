@@ -44,7 +44,7 @@ fps_text = [['Back', '60', '90', '120', 'Frames Per Second'],
             [50, 50, 50, 50, 50, 80], [0, 4]]
 
 
-def get_surface(index):
+def get_properties(index):
     surface_prop = {0: main_menu_text, 1: [0, play, settings_text, credits_text],
                     2: [0, settings_controls_text, settings_graphics_text, settings_audio_text],
                     3: [0, settings_graphics_window_size, fps_text]}

@@ -10,11 +10,11 @@ class Background:
         self.image = self.load_image()
 
     def load_image(self):
-        get_image = pygame.image.load(os.path.join('image', '99.png'))
+        get_image = pygame.image.load(os.path.join('image', '100.jpg'))
         get_image = pygame.transform.scale(get_image, (self.width, self.height))
         return get_image
 
     def get_image(self):
-        return self.image
+        return self.image.convert()
 
 
