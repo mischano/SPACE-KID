@@ -1,10 +1,10 @@
-from display import Window
+from window import Display
 import audio
 
 # CLOCK = pygame.time.Clock()
 
 
-class Menu(Window):
+class Menu(Display):
 
     def __init__(self, full_screen, fps):
         super(Menu, self).__init__(1440, 820, full_screen, fps)
@@ -13,7 +13,7 @@ class Menu(Window):
         self.fps = fps
 
         audio.load_music('Sofi.wav')
-        # audio.play_music()
+        audio.play_music()
 
     def main_menu(self):
 

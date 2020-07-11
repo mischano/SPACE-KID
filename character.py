@@ -1,8 +1,8 @@
-from display import Window
+from window import Window
 from background import Background
 import properties
 import pygame
-import display
+import window
 
 
 class Character(Window):
@@ -15,7 +15,7 @@ class Character(Window):
     def main_menu(self):
         """ main_menu: Displays the main menu. """
         rect_class_menu = properties.main_menu_text
-        functions_list = [0, self.play, self.menu_settings, self.menu_credits, display.exit_game]
+        functions_list = [0, self.play, self.menu_settings, self.menu_credits, window.exit_game]
 
         super().init_window()
 
