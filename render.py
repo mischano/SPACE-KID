@@ -18,11 +18,12 @@ def draw(screen, text, rect_pos, font_size, font_color):
 
 
 def draw_fade(method1, image, full_screen):
-    """ fade_display -- Fades out the screen when a button is clicked.
-    *
-    *   INPUT: none
-    *
-    *   OUTPUT: none
+    """
+    Fades out the screen when a button is clicked.
+    :param method1:
+    :param image:
+    :param full_screen:
+    :return:
     """
 
     ''' Create a temporarily window for fadeout effects '''

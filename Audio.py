@@ -5,7 +5,7 @@ import os
 pygame.mixer.init()
 channels = pygame.mixer.get_num_channels()
 
-music = {"menu": pygame.mixer.Sound('sound/Sofi.wav')}
+# music = {"menu": pygame.mixer.Sound('sound/Sofi.wav')}
 
 sound = {"hower": pygame.mixer.Sound('sound/button_hower_01.wav'),
          "click": pygame.mixer.Sound('sound/button_click_01.wav')}

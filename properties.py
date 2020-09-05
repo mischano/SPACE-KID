@@ -1,3 +1,8 @@
+GAME_TITLE = "SPACE KID"  # Title of the game. Shows on the top left corner.
+DARK_WHITE = (189, 176, 174)  # menu text color
+RED = (163, 1, 1)  # menu text highlight color
+GREEN = (7, 254, 3)
+
 # 0
 main_menu_text = [['Exit', 'Play', 'Settings', 'Credits', 'SPACE KID'], [(80, 500, 105, 60), (80, 290, 120, 60),
                                                                          (80, 360, 210, 60), (80, 430, 185, 60),
